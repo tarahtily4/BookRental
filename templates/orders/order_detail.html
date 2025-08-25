@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Замовлення #{{ order.id }}</h2>
+<p>Статус: <strong>{{ order.get_status_display }}</strong></p>
+<p>Оплачено: {% if order.paid %}Так{% else %}Ні{% endif %}</p>
+{% if order.rental_until %}<p>Діє до: {{ order.rental_until }}</p>{% endif %}
+
+<h4>Книги</h4>
+<ul>
+  {% for it in order.items.all %}
+    <li>{{ it.book.title }} — {{ it.get_condition_display }} × {{ it.qty }}</li>
+  {% endfor %}
+</ul>
+
+<h4>Хронологія</h4>
+<ol>
+  {% for e in order.events.all %}
+    <li>{{ e.created_at|date:"Y-m-d H:i" }} — {{ e.get_status_display }}</li>
+  {% empty %}
+    <li>Подій поки нема.</li>
+  {% endfor %}
+</ol>
+{% endblock %}

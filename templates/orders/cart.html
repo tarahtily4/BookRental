@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Кошик</h2>
+<table class="table">
+  <thead><tr><th>Книга</th><th>Стан</th><th>К-сть</th><th></th></tr></thead>
+  <tbody>
+  {% for it in items %}
+    <tr>
+      <td>{{ it.book.title }}</td>
+      <td>{{ it.get_condition_display }}</td>
+      <td>{{ it.qty }}</td>
+      <td><a class="btn btn-sm btn-outline-danger" href="{% url 'orders:remove_from_cart' it.id %}">Видалити</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4">Кошик порожній</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<div class="d-flex justify-content-end">
+  <a class="btn btn-primary" href="{% url 'orders:checkout' %}">Оформити замовлення</a>
+</div>
+{% endblock %}

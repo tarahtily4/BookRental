@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Мій кабінет</h2>
+
+<p>Підписка:
+  {% if request.user.profile.subscription_active %}
+    <span class="badge text-bg-success">Активна до {{ request.user.profile.subscription_until }}</span>
+  {% else %}
+    <span class="badge text-bg-secondary">Не активна</span>
+    <a href="{% url 'payments:subscribe' %}" class="btn btn-sm btn-outline-primary ms-2">Оформити</a>
+  {% endif %}
+</p>
+
+<h4 class="mt-4">Останні замовлення</h4>
+<table class="table table-sm">
+  <thead><tr><th>#</th><th>Статус</th><th>Оплачено</th><th>Створено</th><th></th></tr></thead>
+  <tbody>
+  {% for o in orders %}
+    <tr>
+      <td>{{ o.id }}</td>
+      <td>{{ o.get_status_display }}</td>
+      <td>{% if o.paid %}Так{% else %}Ні{% endif %}</td>
+      <td>{{ o.created_at|date:"Y-m-d H:i" }}</td>
+      <td><a class="btn btn-sm btn-outline-secondary" href="{% url 'orders:detail' o.id %}">Деталі</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">Замовлень ще немає.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="uk">
+  <body style="font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f7f7fb; margin:0; padding:24px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #ececf3;">
+      <tr>
+        <td style="padding:20px 24px; background:#0d6efd; color:#fff;">
+          <h2 style="margin:0;">BookRental</h2>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:24px;">
+          <h3 style="margin:0 0 12px;">Замовлення №{{ order.id }} — створено</h3>
+          <p style="margin:0 0 16px;">Вітаємо, {{ user.get_full_name|default:user.username }}!</p>
+
+          <p style="margin:0 0 16px;">Ваше замовлення успішно оформлено. Нижче — коротко по позиціях:</p>
+          <ul style="margin:0 0 16px; padding-left:18px;">
+            {% for it in order.items.all %}
+              <li>{{ it.book.title }} — {{ it.get_condition_display }} × {{ it.qty }}</li>
+            {% endfor %}
+          </ul>
+
+          {% if order.paid %}
+            <p style="margin:0 0 16px; color:#198754;">Статус оплати: оплачено. Діє до: {{ order.rental_until|date:"Y-m-d" }}.</p>
+          {% else %}
+            <p style="margin:0 0 16px; color:#dc3545;">Статус оплати: очікує/потребує підписки.</p>
+          {% endif %}
+
+          <p style="margin:0;">Дякуємо, що обрали BookRental!</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:16px 24px; color:#6c757d; font-size:12px; background:#f8f9fa;">
+          Якщо це були не ви — просто проігноруйте лист.
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

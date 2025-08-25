@@ -1,0 +1,12 @@
+Замовлення №{{ order.id }} — створено
+
+Користувач: {{ user.get_full_name|default:user.username }}
+
+Позиції:
+{% for it in order.items.all %}- {{ it.book.title }} — {{ it.get_condition_display }} × {{ it.qty }}
+{% endfor %}
+
+Статус оплати: {% if order.paid %}оплачено{% else %}потребує підписки/оплати{% endif %}
+{% if order.rental_until %}Діє до: {{ order.rental_until|date:"Y-m-d" }}{% endif %}
+
+Дякуємо за замовлення!

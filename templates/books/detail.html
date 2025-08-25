@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} — BookRental{% endblock %}
+{% block content %}
+
+<div class="row g-4">
+  <div class="col-12 col-md-4">
+    <div class="ratio ratio-3x4 rounded shadow-sm overflow-hidden">
+      {% if book.cover %}
+        <img src="{{ book.cover.url }}" class="book-cover" alt="{{ book.title }}">
+      {% elif book.cover_url %}
+        <img src="{{ book.cover_url }}" class="book-cover" alt="{{ book.title }}">
+      {% else %}
+        <div class="bg-light d-flex align-items-center justify-content-center text-muted">Без обкладинки</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-12 col-md-8">
+    <h1 class="h3 fw-semibold mb-1">{{ book.title }}</h1>
+    <p class="text-muted mb-3">{{ book.author }}</p>
+
+    {% if book.category %}
+      <span class="badge text-bg-light border me-1">{{ book.category }}</span>
+    {% endif %}
+    <span class="badge {% if book.in_stock %}text-bg-success{% else %}text-bg-secondary{% endif %}">
+      {% if book.in_stock %}в наявності{% else %}нема{% endif %}
+    </span>
+
+    <ul class="list-unstyled mt-3 mb-4">
+      <li><strong>Кількість сторінок:</strong> {{ book.pages }}</li>
+    </ul>
+
+    <h6 class="mb-2">Наявність за станом:</h6>
+    <ul class="mb-4">
+      <li>Нова: {{ stock_map.NEW|default:0 }}</li>
+      <li>Використовувалась: {{ stock_map.USED|default:0 }}</li>
+      <li>Хрупка: {{ stock_map.FRAGILE|default:0 }}</li>
+    </ul>
+
+    <form method="post" action="{% url 'orders:add_to_cart' book.slug %}" class="row g-2">
+      {% csrf_token %}
+      <div class="col-12 col-md-5">
+        <select name="condition" class="form-select">
+          <option value="NEW">Нова</option>
+          <option value="USED">Використовувалась</option>
+          <option value="FRAGILE">Хрупка</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-3">
+        <input type="number" min="1" value="1" name="qty" class="form-control">
+      </div>
+      <div class="col-6 col-md-4 d-grid">
+        <button class="btn btn-primary" {% if not book.in_stock %}disabled{% endif %}>Додати в кошик</button>
+      </div>
+    </form>
+
+    {% if book.description %}
+      <hr class="my-4">
+      <p class="lead">{{ book.description|linebreaks }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
